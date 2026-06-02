@@ -15,9 +15,13 @@ app.post('/chat', async (req, res) => {
       max_tokens: 1024,
       messages: messages,
     });
-    res.json({ reply: response.content[0].text });
+    const reply = response.content && response.content[0] && response.content[0].text
+      ? response.content[0].text
+      : 'Errore nella risposta.';
+    res.json({ reply });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ reply: 'Errore: ' + err.message });
   }
 });
 
